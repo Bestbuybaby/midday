@@ -27,7 +27,6 @@
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
     "@hookform/resolvers": "^5.2.2",
-    "@midday/api": "workspace:*",
     "@midday/app-store": "workspace:*",
     "@midday/desktop-client": "workspace:*",
     "@midday/engine": "workspace:*",
