@@ -1,4 +1,12 @@
 {
-  "extends": "../../tsconfig.json",
-  "include": ["index.ts"]
+  "extends": "@midday/tsconfig/base.json",
+  "include": ["emails", "components"],
+  "exclude": ["node_modules"],
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "jsx": "react-jsx",
+    "jsxImportSource": "react"
+  }
 }

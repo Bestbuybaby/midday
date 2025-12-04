@@ -1,26 +1,31 @@
 {
   "name": "midday",
   "private": true,
-  "engines": {
-    "node": ">=v18.17.0"
-  },
-  "workspaces": ["packages/*", "apps/*", "tooling/*"],
+  "workspaces": ["packages/*", "apps/*", "packages/email/*"],
   "scripts": {
     "build": "turbo build",
     "clean": "git clean -xdf node_modules",
     "clean:workspaces": "turbo clean",
     "dev": "turbo dev --parallel",
-    "format": "prettier --write \"**/*.{js,cjs,mjs,ts,tsx,md,json}\" --ignore-path .gitignore",
+    "test": "turbo test --parallel",
+    "start:dashboard": "turbo start --filter=@midday/dashboard",
+    "start:website": "turbo start --filter=@midday/website",
+    "dev:api": "turbo dev --filter=@midday/api",
+    "dev:dashboard": "turbo dev --filter=@midday/dashboard",
+    "build:dashboard": "turbo build --filter=@midday/dashboard",
+    "dev:engine": "turbo dev --filter=@midday/engine",
+    "dev:website": "turbo dev --filter=@midday/website ",
+    "dev:desktop": "turbo dev --filter=@midday/desktop",
+    "jobs:dashboard": "turbo jobs --filter=@midday/jobs",
+    "format": "biome format --write .",
     "lint": "turbo lint && manypkg check",
-    "lint:fix": "turbo lint:fix && manypkg fix",
-    "check:types": "turbo type-check"
+    "typecheck": "turbo typecheck"
   },
   "dependencies": {
-    "@ianvs/prettier-plugin-sort-imports": "^4.1.0",
-    "@manypkg/cli": "^0.21.0",
-    "prettier": "^3.0.3",
-    "prettier-plugin-tailwindcss": "^0.5.4",
-    "turbo": "^1.10.14",
-    "typescript": "^5.2.2"
-  }
+    "@biomejs/biome": "1.9.4",
+    "@manypkg/cli": "^0.24.0",
+    "turbo": "2.5.6",
+    "typescript": "^5.9.2"
+  },
+  "packageManager": "bun@1.2.21"
 }

@@ -1,37 +1,33 @@
 {
   "name": "@midday/email",
   "version": "1.0.0",
-  "main": "./index.ts",
   "private": true,
-  "types": "./index.ts",
-  "workspaces": [
-    ".react-email"
-  ],
+  "main": "index.ts",
+  "exports": {
+    "./emails/*": "./emails/*.tsx",
+    "./locales": "./locales/index.ts",
+    "./render": "./render.ts"
+  },
   "scripts": {
     "clean": "rm -rf .turbo node_modules",
-    "lint": "eslint .",
-    "lint:fix": "pnpm lint --fix",
-    "check:types": "tsc --noEmit",
-    "dev": "email dev -p 3001",
-    "export": "email export"
+    "lint": "biome check .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit",
+    "dev": "email dev -p 3003",
+    "build": "email build",
+    "start": "email start"
   },
   "dependencies": {
-    "@react-email/button": "0.0.10",
-    "@react-email/components": "0.0.7",
-    "@react-email/html": "0.0.4",
-    "nanoid": "^5.0.1",
-    "react-email": "1.9.4",
-    "resend": "^1.1.0"
+    "@midday/ui": "workspace:*",
+    "@midday/utils": "workspace:*",
+    "@react-email/components": "0.0.42",
+    "@react-email/render": "1.1.2",
+    "@react-email/tailwind": "1.0.5",
+    "date-fns": "^4.1.0",
+    "react-email": "4.0.16",
+    "responsive-react-email": "^0.0.5"
   },
   "devDependencies": {
-    "@midday/eslint": "^0.2.0",
-    "eslint": "^8.49.0",
-    "typescript": "^5.2.2"
-  },
-  "eslintConfig": {
-    "root": true,
-    "extends": [
-      "@midday/eslint/base"
-    ]
+    "typescript": "^5.9.2"
   }
 }

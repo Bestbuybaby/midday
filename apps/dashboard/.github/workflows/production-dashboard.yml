@@ -1,0 +1,72 @@
+name: Production Deployment - Dashboard
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID_DASHBOARD }}
+  TURBO_TOKEN: ${{ secrets.VERCEL_TOKEN }}
+  TURBO_TEAM: ${{ secrets.VERCEL_ORG_ID }}
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - apps/dashboard/**
+      - packages/**
+
+jobs:
+  deploy-production:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: v1.2.23
+
+      - name: Install dependencies
+        run: bun install
+
+      # 🔗 REQUIRED for Monorepo (Dashboard Project)
+      - name: 🔗 Link Vercel Project
+        working-directory: ./apps/dashboard
+        run: bunx vercel link --yes \
+          --project=${{ secrets.VERCEL_PROJECT_ID_DASHBOARD }} \
+          --org=${{ secrets.VERCEL_ORG_ID }} \
+          --token=${{ secrets.VERCEL_TOKEN }}
+
+      # Pull environment variables
+      - name: 📤 Pull Vercel Environment (.env)
+        working-directory: ./apps/dashboard
+        run: bunx vercel env pull .env --yes \
+          --environment=production \
+          --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: 📤 Pull Vercel Config
+        working-directory: ./apps/dashboard
+        run: bunx vercel pull --yes \
+          --environment=production \
+          --token=${{ secrets.VERCEL_TOKEN }}
+
+      # Build monorepo dependencies
+      - name: 🏗 Build dependencies with Turbo
+        run: bunx turbo run build --filter=apps/dashboard...
+
+      # Typecheck
+      - name: 🪐 Check TypeScript
+        working-directory: ./apps/dashboard
+        run: NODE_OPTIONS="--max-old-space-size=8192" bun run typecheck
+
+      # Build dashboard Vercel output
+      - name: 🏗 Build Project Artifacts
+        working-directory: ./apps/dashboard
+        run: bunx vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      # Deploy and alias domain
+      - name: 🚀 Deploy to Vercel
+        working-directory: ./apps/dashboard
+        run: |
+          bunx vercel deploy --prebuilt --prod --archive=tgz --token=${{ secrets.VERCEL_TOKEN }} > domain.txt
+          bunx vercel alias --token=${{ secrets.VERCEL_TOKEN }} set `cat domain.txt` app.er0s.co
