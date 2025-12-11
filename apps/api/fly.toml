@@ -2,6 +2,7 @@ app = 'midday-api'
 primary_region = 'fra'
 
 [build]
+  dockerfile = '../../Dockerfile'
 
 [env]
   PORT = '8080'
