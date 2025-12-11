@@ -1,53 +1,49 @@
 # =============================
-# Stage 0: Base with Bun
+# Stage 0: Base With Bun & Turbo
 # =============================
 FROM oven/bun:1.2.22 AS base
 
-# Install turbo globally
 RUN bun add -g turbo
 
-
 # =============================
-# Stage 1: Builder
+# Stage 1: Builder (Pruned Repo)
 # =============================
 FROM base AS builder
 WORKDIR /app
 
-# Copy full repo
+# Copy entire monorepo
 COPY . .
 
-# Prune API workspace for Docker
+# Prune for API workspace (Monorepo → Pruned)
 RUN turbo prune @midday/api --docker
 
-# Now inside pruned output
+# Move into pruned workspace
 WORKDIR /app/out/full
 
-# Install deps needed for builds
+# Install deps for build
 RUN bun install
 
-# Build ENGINE before API
+# Build engine inside the pruned workspace
 RUN cd apps/engine && bun run build
 
-# Build API (if needed)
+# (Optional) build API if needed
 # RUN cd apps/api && bun run build
 
 
 # =============================
-# Stage 2: Installer
+# Stage 2: Installer (Production)
 # =============================
 FROM base AS installer
 WORKDIR /app
 
-# Copy pruned JSON for install
+# Install production dependencies from pruned output
 COPY --from=builder /app/out/json/ .
-
-# Install API deps
 RUN bun install
 
-# Copy pruned FULL repo
+# Copy source code from pruned output
 COPY --from=builder /app/out/full/ .
 
-# Copy ENGINE dist output from builder
+# Copy built engine dist from pruned output
 COPY --from=builder /app/out/full/apps/engine/dist ./apps/engine/dist
 
 
@@ -59,6 +55,6 @@ FROM installer AS runner
 WORKDIR /app/apps/api
 
 ENV NODE_ENV=production
-EXPOSE 3000
+EXPOSE 8080
 
 CMD ["bun", "run", "src/index.ts"]
