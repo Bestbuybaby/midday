@@ -1,56 +1,64 @@
-# Base image with Bun
+# =============================
+# Stage 0: Base with Bun
+# =============================
 FROM oven/bun:1.2.22 AS base
 
-# Install turbo CLI globally using Bun
-FROM base AS turbo-cli
+# Install turbo globally
 RUN bun add -g turbo
 
-# Builder stage
-FROM turbo-cli AS builder
+
+# =============================
+# Stage 1: Builder
+# =============================
+FROM base AS builder
 WORKDIR /app
-# Copy all files
+
+# Copy full repo
 COPY . .
-# Use turbo CLI from Bun global install to prune workspaces
+
+# Prune API workspace for Docker
 RUN turbo prune @midday/api --docker
 
-# Installer stage
+# Now inside pruned output
+WORKDIR /app/out/full
+
+# Install deps needed for builds
+RUN bun install
+
+# Build ENGINE before API
+RUN cd apps/engine && bun run build
+
+# Build API (if needed)
+# RUN cd apps/api && bun run build
+
+
+# =============================
+# Stage 2: Installer
+# =============================
 FROM base AS installer
 WORKDIR /app
 
-# Install build dependencies for native modules (canvas, etc.)
-RUN apt-get update && apt-get install -y \
-    python3 \
-    python3-pip \
-    build-essential \
-    libcairo2-dev \
-    libpango1.0-dev \
-    libjpeg-dev \
-    libgif-dev \
-    librsvg2-dev \
-    && rm -rf /var/lib/apt/lists/*
-
-# First install the dependencies (as they change less often)
+# Copy pruned JSON for install
 COPY --from=builder /app/out/json/ .
-# Don't copy the lockfile, allow Bun to generate a fresh one
+
+# Install API deps
 RUN bun install
 
-# Copy the full source code
+# Copy pruned FULL repo
 COPY --from=builder /app/out/full/ .
 
-# Copy the prebuilt engine dist from the build context (assumes CI built it)
-COPY apps/engine/dist /app/apps/engine/dist
+# Copy ENGINE dist output from builder
+COPY --from=builder /app/out/full/apps/engine/dist ./apps/engine/dist
 
-# Runner stage (same as installer to avoid another copy)
+
+# =============================
+# Stage 3: Runner
+# =============================
 FROM installer AS runner
 
-# Set the API directory as working directory
 WORKDIR /app/apps/api
 
-# Set environment variables
 ENV NODE_ENV=production
-
-# Expose the port the API runs on
 EXPOSE 3000
 
-# Run the API directly with Bun
 CMD ["bun", "run", "src/index.ts"]
