@@ -8,6 +8,7 @@ const I18nMiddleware = createI18nMiddleware({
   defaultLocale: "en",
   urlMappingStrategy: "rewrite",
 });
+// Github Auth Added
 
 export async function middleware(request: NextRequest) {
   // @ts-ignore-error - NextRequest type with current bun version is not compatible with NextResponse type
