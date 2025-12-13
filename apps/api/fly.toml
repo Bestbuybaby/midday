@@ -2,8 +2,8 @@ app = "midday-ndoztw"
 primary_region = "fra"
 
 [build]
-  dockerfile = "../../Dockerfile"  # Move up to the root directory where Dockerfile is located
-  context = "../../"  # Context should be the root directory where all files are located
+  dockerfile = "../../Dockerfile"  # Move up to the root directory where the Dockerfile is located
+  context = "../../"  # Context should be the root directory of the monorepo
 
 [env]
   PORT = "8080"
