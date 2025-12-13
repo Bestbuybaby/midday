@@ -38,8 +38,8 @@ export default async function Overview(props: Props) {
 
   const chat = currentChatId
     ? await queryClient.fetchQuery(
-      trpc.chats.get.queryOptions({ chatId: currentChatId }),
-    )
+        trpc.chats.get.queryOptions({ chatId: currentChatId }),
+      )
     : null;
 
   if (currentChatId && !chat) {

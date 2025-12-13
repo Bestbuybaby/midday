@@ -166,7 +166,7 @@ export function ChatMessageActions({
                   "flex items-center justify-center w-6 h-6 transition-colors duration-200 hover:bg-muted",
                   (createFeedbackMutation.isPending ||
                     deleteFeedbackMutation.isPending) &&
-                  "opacity-50 cursor-not-allowed",
+                    "opacity-50 cursor-not-allowed",
                 )}
               >
                 <Icons.ThumbUp
@@ -206,7 +206,7 @@ export function ChatMessageActions({
                   "flex items-center justify-center w-6 h-6 transition-colors duration-200 hover:bg-muted",
                   (createFeedbackMutation.isPending ||
                     deleteFeedbackMutation.isPending) &&
-                  "opacity-50 cursor-not-allowed",
+                    "opacity-50 cursor-not-allowed",
                 )}
               >
                 <Icons.ThumbDown
