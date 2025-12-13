@@ -24,7 +24,11 @@
   },
   "dependencies": {
     "@biomejs/biome": "1.9.4",
+    "@langchain/classic": "1.0.3",
     "@manypkg/cli": "^0.25.1",
+    "openai": "6.10.0",
+    "react": "19.2.3",
+    "react-dom": "19.2.1",
     "turbo": "2.6.3",
     "typescript": "^5.9.3"
   }

@@ -15,7 +15,7 @@ WORKDIR /app
 # Copy the entire monorepo into the container (context should be the root of the repo)
 COPY . .
 
-# Ensure Bun's dependencies are installed
+# Ensure Bun's dependencies are installed (this includes workspaces)
 RUN bun install
 
 # Prune for API workspace (Monorepo → Pruned)
@@ -24,10 +24,10 @@ RUN turbo prune @midday/api --docker
 # Move into pruned workspace
 WORKDIR /app/out/full
 
-# Install deps for build
+# Install dependencies for the pruned workspace
 RUN bun install
 
-# Build engine inside the pruned workspace
+# Build engine inside the pruned workspace (optional, based on your requirements)
 RUN cd apps/engine && bun run build
 
 # =============================
