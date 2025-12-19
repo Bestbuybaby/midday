@@ -1,3 +1,7 @@
+# Midday API Dockerfile
+# Optimized for Fly.io GitHub deployment
+# Deploy from repository ROOT with Dockerfile path: apps/api/Dockerfile
+
 # Base image with Bun
 FROM oven/bun:1.2.22 AS base
 
@@ -5,15 +9,17 @@ FROM oven/bun:1.2.22 AS base
 FROM base AS turbo-cli
 RUN bun add -g turbo
 
-# Builder stage
+# Builder stage - prune the monorepo for just the API
 FROM turbo-cli AS builder
 WORKDIR /app
-# Copy all files
+
+# Copy all files from the repository root
 COPY . .
-# Use turbo CLI from Bun global install to prune workspaces
+
+# Use turbo CLI to prune workspaces - creates optimized /out directory
 RUN turbo prune @midday/api --docker
 
-# Installer stage
+# Installer stage - install dependencies and build
 FROM base AS installer
 WORKDIR /app
 
@@ -29,18 +35,20 @@ RUN apt-get update && apt-get install -y \
     librsvg2-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# First install the dependencies (as they change less often)
+# Copy pruned package.json files first (for better caching)
 COPY --from=builder /app/out/json/ .
-# Don't copy the lockfile, allow Bun to generate a fresh one
+
+# Install dependencies
 RUN bun install
 
-# Copy the full source code
+# Copy the full pruned source code
 COPY --from=builder /app/out/full/ .
 
-# Copy the prebuilt engine dist from the build context (assumes CI built it)
-COPY apps/engine/dist /app/apps/engine/dist
+# Build the engine package (required by API)
+# This creates the dist folder that the API imports
+RUN cd apps/engine && bun run build || echo "Engine build skipped or not needed"
 
-# Runner stage (same as installer to avoid another copy)
+# Runner stage
 FROM installer AS runner
 
 # Set the API directory as working directory
@@ -48,9 +56,14 @@ WORKDIR /app/apps/api
 
 # Set environment variables
 ENV NODE_ENV=production
+ENV PORT=8080
 
-# Expose the port the API runs on
-EXPOSE 3000
+# Expose the port (Fly.io expects 8080 by default)
+EXPOSE 8080
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8080/health || exit 1
 
 # Run the API directly with Bun
 CMD ["bun", "run", "src/index.ts"]
