@@ -1,29 +1,25 @@
 # Fly.io Configuration for Midday API
 # =====================================
-# This file should be at the REPOSITORY ROOT
-# The Dockerfile path is specified in the [build] section
+# Place this file AND the Dockerfile at the repository root
 
-app = 'your-midday-api'  # CHANGE THIS to your app name
-primary_region = 'fra'
+app = "midday-api"
+primary_region = "fra"
 
 [build]
-  # Path to Dockerfile relative to this fly.toml (repository root)
-  dockerfile = "apps/api/Dockerfile"
-  # Build context is the directory containing this fly.toml (repository root)
-  # This allows the Dockerfile to access the entire monorepo
+  # Dockerfile is at repository root, no path needed
 
 [env]
-  PORT = '8080'
-  NODE_ENV = 'production'
-  TZ = 'UTC'
+  PORT = "8080"
+  NODE_ENV = "production"
+  TZ = "UTC"
 
 [http_service]
   internal_port = 8080
   force_https = true
-  auto_stop_machines = 'suspend'
+  auto_stop_machines = "suspend"
   auto_start_machines = true
   min_machines_running = 1
-  processes = ['app']
+  processes = ["app"]
 
   [http_service.concurrency]
     type = "requests"
@@ -38,6 +34,6 @@ primary_region = 'fra'
     path = "/health"
 
 [[vm]]
-  memory = '1gb'
-  cpu_kind = 'shared'
+  memory = "1gb"
+  cpu_kind = "shared"
   cpus = 1
