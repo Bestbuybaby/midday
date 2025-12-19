@@ -1,3 +1,4 @@
+'use client'
 import { BankAccountsChart } from "@/components/charts/bank-accounts-chart";
 import { BankConnectionsChart } from "@/components/charts/bank-connections-chart";
 import { InboxChart } from "@/components/charts/inbox-chart";
