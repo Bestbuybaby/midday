@@ -213,7 +213,7 @@ export function Header() {
 </svg>
                     `,
                     );
-                  } catch {}
+                  } catch { }
                 }}
               >
                 <Icons.LogoSmall className="size-3" />
@@ -320,7 +320,7 @@ export function Header() {
 
         <a
           className="text-sm font-medium pr-2 border-l-[1px] border-border pl-4 hidden md:block"
-          href="https://app.midday.ai"
+          href="https://midday-dashboard-cyan.vercel.app"
         >
           Sign in
         </a>
