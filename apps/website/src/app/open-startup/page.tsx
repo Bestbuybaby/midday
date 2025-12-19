@@ -1,5 +1,5 @@
 'use client'
-import { BankAccountsChart } from "@/components/charts/bank-accounts-chart";
+// import { BankAccountsChart } from "@/components/charts/bank-accounts-chart";
 import { BankConnectionsChart } from "@/components/charts/bank-connections-chart";
 import { InboxChart } from "@/components/charts/inbox-chart";
 import { InvoiceCustomersChart } from "@/components/charts/invoice-customers";
@@ -59,7 +59,7 @@ export default async function Page() {
             <UsersChart />
             <TransactionsChart />
             <TransactionEnrichmentsChart />
-            <BankAccountsChart />
+            {/* <BankAccountsChart /> */}
             <BankConnectionsChart />
             <VaultChart />
             <InvoicesChart />
