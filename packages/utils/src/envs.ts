@@ -3,7 +3,7 @@ export function getAppUrl() {
     process.env.VERCEL_ENV === "production" ||
     process.env.NODE_ENV === "production"
   ) {
-    return "https://app.midday.ai";
+    return "https://midday-dashboard-cyan.vercel.app";
   }
 
   if (process.env.VERCEL_ENV === "preview") {
@@ -18,7 +18,7 @@ export function getEmailUrl() {
     return "http://localhost:3000";
   }
 
-  return "https://midday.ai";
+  return "https://midday-dashboard-cyan.vercel.app";
 }
 
 export function getWebsiteUrl() {
@@ -26,7 +26,7 @@ export function getWebsiteUrl() {
     process.env.VERCEL_ENV === "production" ||
     process.env.NODE_ENV === "production"
   ) {
-    return "https://midday.ai";
+    return "https://midday-dashboard-cyan.vercel.app";
   }
 
   if (process.env.VERCEL_ENV === "preview") {
@@ -34,7 +34,6 @@ export function getWebsiteUrl() {
   }
 
   return "http://localhost:3000";
-  // return "https://midday-dashboard-cyan.vercel.app";
 }
 
 export function getCdnUrl() {
