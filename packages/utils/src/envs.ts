@@ -33,8 +33,8 @@ export function getWebsiteUrl() {
     return `https://${process.env.VERCEL_URL}`;
   }
 
-  // return "http://localhost:3000";
-  return "https://midday-dashboard-cyan.vercel.app";
+  return "http://localhost:3000";
+  // return "https://midday-dashboard-cyan.vercel.app";
 }
 
 export function getCdnUrl() {
