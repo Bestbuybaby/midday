@@ -3,7 +3,7 @@ const config = {
   poweredByHeader: false,
   reactStrictMode: true,
   trailingSlash: true,
-  transpilePackages: ["@midday/ui", "@midday/tailwind", "next-mdx-remote"],
+  transpilePackages: ["@midday/ui"],
   typescript: {
     ignoreBuildErrors: true,
   },
