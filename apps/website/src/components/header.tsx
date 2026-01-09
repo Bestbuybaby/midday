@@ -213,7 +213,7 @@ export function Header() {
 </svg>
                     `,
                     );
-                  } catch { }
+                  } catch {}
                 }}
               >
                 <Icons.LogoSmall className="size-3" />
